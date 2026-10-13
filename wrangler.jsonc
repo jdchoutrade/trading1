@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
-  "name": "jd-analysis",
+  "name": "trading1",
   "main": "worker/index.ts",
   "compatibility_date": "2026-10-12",
   "workers_dev": true,

@@ -146,7 +146,7 @@ FORCE_SIGNAL=true
 
 ## 11. Deploy frontend និង backend ទៅ Cloudflare
 
-Cloudflare deployment ប្រើ **Workers** សម្រាប់ API/backend, **Workers Static Assets** សម្រាប់ dashboard, **D1** សម្រាប់ signal history និង **R2** សម្រាប់ screenshots។ API របស់ Gemini/DeepSeek នៅតែត្រូវហៅទៅ provider ដើមតាម Internet; កុំដាក់ API key ក្នុង source code ឬ `wrangler.jsonc`។ App ដែល deploy នឹងទាមទារ Basic Auth មុនចូល API និងរូបភាព ដោយ username `jd-analysis` និង password ដែលអ្នកកំណត់ជា Worker secret។
+Cloudflare deployment ប្រើ **Workers** សម្រាប់ API/backend, **Workers Static Assets** សម្រាប់ dashboard, **D1** សម្រាប់ signal history និង **R2** សម្រាប់ screenshots។ Worker មានឈ្មោះ `trading1` ដើម្បីឲ្យត្រូវនឹង Workers Builds project ដែលភ្ជាប់នឹង repository នេះ។ API របស់ Gemini/DeepSeek នៅតែត្រូវហៅទៅ provider ដើមតាម Internet; កុំដាក់ API key ក្នុង source code ឬ `wrangler.jsonc`។ App ដែល deploy នឹងទាមទារ Basic Auth មុនចូល API និងរូបភាព ដោយ username `jd-analysis` និង password ដែលអ្នកកំណត់ជា Worker secret។
 
 ### Run local
 
@@ -159,14 +159,15 @@ Cloudflare deployment ប្រើ **Workers** សម្រាប់ API/backend
 ### Deploy ទៅ Cloudflare
 
 1. ចូល Cloudflare ដោយ `npx wrangler login`។ Workers និង D1/R2 ត្រូវបើកសម្រាប់ account នោះ។
-2. D1 `jd-analysis-db` ត្រូវបានបង្កើតរួចហើយ និងមាន ID ក្នុង `wrangler.jsonc`; migration ដំបូងក៏បានអនុវត្តរួចលើ database នោះ។ បើអ្នកប្រើ Cloudflare account ផ្សេង ទើបបង្កើត D1 ថ្មី ហើយប្ដូរ ID ក្នុង config។ សម្រាប់ account បច្ចុប្បន្ន សូមបើក R2 ក្នុង Cloudflare Dashboard ជាមុន (អាចតម្រូវឲ្យបន្ថែម billing) រួចបង្កើត bucket:
+2. ធានាថា `npx wrangler whoami` និង Cloudflare Workers Builds ប្រើ **Cloudflare account ដូចគ្នា**។ Log របស់ Workers Builds បង្ហាញថាវាប្រើ account ផ្សេងពី account ដែលបានបង្កើត D1 ក្នុង config បច្ចុប្បន្ន។ Resource IDs និង secrets មិនអាចប្រើឆ្លង account បានទេ។
+3. D1 `jd-analysis-db` ត្រូវបានបង្កើតរួចហើយ និងមាន ID ក្នុង `wrangler.jsonc`; migration ដំបូងក៏បានអនុវត្តរួចលើ database នោះ។ បើ account សម្រាប់ deploy ជា account ផ្សេង សូមបង្កើត D1 ថ្មីក្នុង account នោះ ហើយប្ដូរ `database_id` ក្នុង config រួចអនុវត្ត migration ដោយ `npm run db:remote`។ សូមបើក R2 ក្នុង account ដដែលពី Cloudflare Dashboard ជាមុន (អាចតម្រូវឲ្យបន្ថែម billing) រួចបង្កើត bucket:
 
    ```powershell
    npx wrangler r2 bucket create jd-analysis-uploads
    ```
 
-3. បើ D1 ថ្មីមិនទាន់មាន schema សូមដំណើរការ `npm run db:remote`; លើ account បច្ចុប្បន្ន វានឹងរាយការណ៍ថាគ្មាន migration ដែលនៅសល់។
-4. កំណត់ secrets ដោយបើក prompt ម្តងមួយ។ បញ្ចូលតម្លៃក្នុង prompt ដោយផ្ទាល់—កុំដាក់តម្លៃជា command argument:
+4. បើ D1 ថ្មីមិនទាន់មាន schema សូមដំណើរការ `npm run db:remote`; លើ account បច្ចុប្បន្ន វានឹងរាយការណ៍ថាគ្មាន migration ដែលនៅសល់។
+5. កំណត់ secrets ក្នុង account/Worker ដែល deploy ទៅ។ អ្នកអាចកំណត់តាម Worker Settings → Variables and Secrets ក្នុង Dashboard សម្រាប់ `trading1`, ឬប្រើ Wrangler ដែលចូល account ដូចគ្នា។ បើក prompt ម្តងមួយ ហើយបញ្ចូលតម្លៃដោយផ្ទាល់—កុំដាក់តម្លៃជា command argument:
 
    ```powershell
    npx wrangler secret put APP_PASSWORD
@@ -175,6 +176,6 @@ Cloudflare deployment ប្រើ **Workers** សម្រាប់ API/backend
    ```
 
    `APP_PASSWORD` ចាំបាច់ មិនដូច្នោះទេ API និងរូប upload នឹងនៅជាប់សោ។ API key យ៉ាងហោចណាស់មួយត្រូវការសម្រាប់ការវិភាគ; DeepSeek key ត្រូវការសម្រាប់ Chat។
-5. ផ្ទៀងផ្ទាត់ដោយ `npm run check` និង deploy ដោយ `npm run deploy`។ URL `workers.dev` នឹងបង្ហាញក្នុងលទ្ធផល។
+6. ផ្ទៀងផ្ទាត់ដោយ `npm run check` និង deploy ដោយ `npm run deploy`។ URL `workers.dev` នឹងបង្ហាញក្នុងលទ្ធផល។
 
 កុំដាក់ `.env`, `.dev.vars`, API keys ឬ `APP_PASSWORD` ក្នុង Git/issue/chat។ `.env` ចាស់សម្រាប់ការរត់ Python ក្នុងម៉ាស៊ីននេះប៉ុណ្ណោះ; Wrangler secrets មិនត្រូវបាន sync ពីវាដោយស្វ័យប្រវត្តិទេ។ History ក្នុង SQLite/Neon និងរូបភាព local ចាស់មិនត្រូវបាន import ទៅ D1/R2 ដោយ deployment នេះទេ។ កម្មវិធីដែល deploy និងទិន្នន័យថ្មីនឹងស្ថិតក្នុង Cloudflare។ សូមពិនិត្យ plan, quotas និងតម្លៃ Cloudflare និង AI providers មុនដាក់ឱ្យប្រើប្រាស់ជាសាធារណៈ។
