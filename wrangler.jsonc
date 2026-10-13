@@ -14,7 +14,7 @@
     {
       "binding": "DB",
       "database_name": "jd-analysis-db",
-      "database_id": "228f1e37-fa69-4db3-adad-d82a201a72c4",
+      "database_id": "47a53d84-d805-4d10-b54a-a21f56595276",
       "migrations_dir": "migrations"
     }
   ],
