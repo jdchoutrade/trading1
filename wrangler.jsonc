@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "trading1",
+  "account_id": "d5c1927a139cd70349e332b3a4d45307",
   "main": "worker/index.ts",
   "compatibility_date": "2026-10-12",
   "workers_dev": true,

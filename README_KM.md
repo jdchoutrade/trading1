@@ -159,7 +159,7 @@ Cloudflare deployment ប្រើ **Workers** សម្រាប់ API/backend
 ### Deploy ទៅ Cloudflare
 
 1. ចូល Cloudflare ដោយ `npx wrangler login`។ Workers និង D1/R2 ត្រូវបើកសម្រាប់ account នោះ។
-2. ធានាថា `npx wrangler whoami` និង Cloudflare Workers Builds ប្រើ **Cloudflare account ដូចគ្នា**។ Log របស់ Workers Builds បង្ហាញថាវាប្រើ account ផ្សេងពី account ដែលបានបង្កើត D1 ក្នុង config បច្ចុប្បន្ន។ Resource IDs និង secrets មិនអាចប្រើឆ្លង account បានទេ។
+2. `wrangler.jsonc` កំណត់ account ID `d5c1927a139cd70349e332b3a4d45307` ឲ្យត្រូវនឹង Workers Builds។ Wrangler token នៅម៉ាស៊ីននេះត្រូវបានផ្ទៀងផ្ទាត់ថាមានសិទ្ធិតែ account `77fa8828b4edb71086e716e10532ae55` ដូច្នេះត្រូវបន្ថែម user នេះទៅ account `d5…` ឬ login ជា user ដែលមានសិទ្ធិ account នោះ មុនប្រើ Wrangler ដើម្បីបង្កើត resources/deploy។ Resource IDs និង secrets ត្រូវមានក្នុង account `d5…` ផ្ទាល់; ការកំណត់ account ID ក្នុង config មិនផ្ទេរ D1 ឬ R2 resources ពី account ផ្សេងទេ។
 3. D1 `jd-analysis-db` ត្រូវបានបង្កើតរួចហើយ និងមាន ID ក្នុង `wrangler.jsonc`; migration ដំបូងក៏បានអនុវត្តរួចលើ database នោះ។ បើ account សម្រាប់ deploy ជា account ផ្សេង សូមបង្កើត D1 ថ្មីក្នុង account នោះ ហើយប្ដូរ `database_id` ក្នុង config រួចអនុវត្ត migration ដោយ `npm run db:remote`។ សូមបើក R2 ក្នុង account ដដែលពី Cloudflare Dashboard ជាមុន (អាចតម្រូវឲ្យបន្ថែម billing) រួចបង្កើត bucket:
 
    ```powershell
